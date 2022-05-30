@@ -1,0 +1,26 @@
+service: serverless-example
+frameworkVersion: "2"
+
+custom:
+  stage: dev
+  region: us-west-2
+  # thundra_apikey: <THUNDRA_APIKEY>
+  thundra_agent_lambda_debugger_auth_token: <THUNDRA_AGENT_LAMBDA_DEBUGGER_AUTH_TOKEN>
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  lambdaHashingVersion: 20201221
+  stage: ${self:custom.stage}
+  region: ${self:custom.region}
+
+functions:
+  hello:
+    handler: thundra_handler.wrapper
+    timeout: 120
+    layers:
+      - arn:aws:lambda:${self:custom.region}:269863060030:layer:thundra-lambda-node-layer-minified:125
+    environment:
+      # THUNDRA_APIKEY: ${self:custom.thundra_apikey}
+      THUNDRA_AGENT_LAMBDA_DEBUGGER_AUTH_TOKEN: ${self:custom.thundra_agent_lambda_debugger_auth_token}
+      THUNDRA_AGENT_LAMBDA_HANDLER: handler.hello
